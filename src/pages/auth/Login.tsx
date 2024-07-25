@@ -13,6 +13,14 @@ const Login = () => {
   const handleLogin = async (e: Event) => {
     setErrorMessage('');
     e.preventDefault();
+    dispatch({
+      type: 'LOGIN',
+      username: username,
+      authToken: 'response.data.token',
+      totalQuestions: 10,
+      timePerQuestion: 10,
+    });
+    return;
     if (!username) {
       setErrorMessage('Please enter username');
       return;

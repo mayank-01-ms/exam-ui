@@ -40,6 +40,7 @@ const Question: React.FC<QuestionProps> = ({
           question_id: questionData.question_id,
           option_id: optionId,
           username: authState.username,
+          token: authState.authToken,
         });
         if (response.status === 200) {
           setStats({
@@ -67,7 +68,7 @@ const Question: React.FC<QuestionProps> = ({
               value={option.option_id}
               checked={optionId === option.option_id}
               onChange={() => handleRadioClick(option.option_id)}
-              name="temp"
+              name="answer"
             />
             <label htmlFor={String(option.option_id)}>
               {option.option_text}
@@ -75,12 +76,16 @@ const Question: React.FC<QuestionProps> = ({
           </div>
         ))}
         <div className="reset_answer flex items-center text-blue-400">
-          <MdOutlineRefresh className="mt-[1rem] mr-[0.5rem]" />
-          <p className="mt-[1rem]">Reset answer</p>
+          <span onClick={() => setOptionId(null)}>
+            <MdOutlineRefresh className="mt-[1rem] mr-[0.5rem]" />
+            <p className="mt-[1rem]">Reset answer</p>
+          </span>
         </div>
       </div>
       <div className="text-right mt-[2rem] mr-[2rem]">
-        <Button onClick={submitAnswer}>Next</Button>
+        <Button onClick={submitAnswer}>
+          {questionData.number === authState.totalQuestions ? 'Submit' : 'Next'}
+        </Button>
       </div>
     </div>
   );

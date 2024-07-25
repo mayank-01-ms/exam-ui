@@ -7,6 +7,8 @@ import { ExamState, QuestionData, Stats } from '../../types/Exam';
 
 import { useAuth } from '../../context/AuthProvider';
 
+import './exam.scss';
+
 let questionNumber = 1;
 const _questionData: QuestionData = {
   number: 1,
@@ -25,7 +27,6 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
   const { authState } = useAuth();
 
   const [seconds, setSeconds] = useState<number>(authState.timePerQuestion);
-  const [timerWidth, setTimerWidth] = useState<number>(100);
 
   const [questionData, setQuestionData] = useState<QuestionData>(_questionData);
   const [stats, setStats] = useState<Stats>({
@@ -44,21 +45,11 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
     };
   }, [seconds]);
 
-  // make this a CSS animation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (timerWidth > 0) setTimerWidth(timerWidth - 0.037);
-      else clearInterval(interval);
-    }, 10);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [timerWidth]);
-
   const getNextQuestion = async () => {
     try {
       const response = await axios.post('/api/question', {
         username: authState.username,
+        token: authState.authToken,
       });
       if (response.status === 200) {
         setQuestionData({ ...response.data, number: ++questionNumber });
@@ -67,16 +58,13 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
   };
 
   const handleNextButtonClick = () => {
-    // submit the response here then show the next question
-    // show loading and error state for submit first
+    // this method is called after the submission of response of the quesion
     if (questionNumber === authState.totalQuestions) {
       endExam();
       return;
     }
     getNextQuestion();
-    // if submit then increase attempted else increase skipped
     setSeconds(authState.timePerQuestion);
-    setTimerWidth(100);
   };
 
   const endExam = async () => {
@@ -86,11 +74,12 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
 
   return (
     <div className="question_container bg-white">
-      <div
-        id="timer"
-        className="bg-blue-700 h-[10px]"
-        style={{ width: timerWidth + '%' }}
-      ></div>
+      <div className="progress-bar-wrapper my-[1rem]">
+        <div
+          className="progress-bar bg-blue-500"
+          style={{ animationDuration: `${authState.timePerQuestion}s` }}
+        ></div>
+      </div>
       <div className="bg-white p-[1rem] text-center font-bold text-xl border-b-2 border-slate-200 relative">
         <p className="bg-blue-400 text-center text-white py-[0.25rem] px-[1rem] inline-block rounded-lg absolute top-[10px] left-0 text-base font-normal">
           Time left: {seconds} seconds

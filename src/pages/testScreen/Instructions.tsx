@@ -19,7 +19,9 @@ const Instructions: React.FC<Props> = ({ startExam }) => {
         </li>
         <li>All the best !!</li>
       </ol>
-      <Button onClick={() => startExam()}>Start Test</Button>
+      <div className="mt-[1rem]">
+        <Button onClick={() => startExam()}>Start Test</Button>
+      </div>
     </div>
   );
 };

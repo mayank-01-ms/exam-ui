@@ -1,14 +1,23 @@
 import { useState } from 'react';
-import Button from '../../components/Button';
 import axios from 'axios';
+
+import Button from '../../components/Button';
+
+import { useAuth } from '../../context/AuthProvider';
 
 const Feedback = () => {
   const [feedbackText, setFeedbackText] = useState<string>('');
 
+  const { authState } = useAuth();
+
   const submitFeedback = async () => {
-    await axios.post('api/submit/feedback', {
-      feedback: feedbackText,
-    });
+    try {
+      await axios.post('api/submit/feedback', {
+        username: authState.username,
+        feedback: feedbackText,
+      });
+    } catch (error) {}
+    window.location.reload();
   };
 
   return (
@@ -24,7 +33,7 @@ const Feedback = () => {
         rows={4}
         value={feedbackText}
         onChange={(e) => setFeedbackText(e.target.value)}
-        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:text-white"
+        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
         placeholder="Leave a feedback..."
       ></textarea>
       <div className="mt-[1rem]">

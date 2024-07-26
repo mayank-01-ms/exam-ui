@@ -18,8 +18,7 @@ const Feedback = () => {
         username: authState.username,
         feedback: feedbackText,
       });
-    } catch(error) {
-      
+    } catch (error) {
     } finally {
       setIsFeedbackSubmitted(true);
     }

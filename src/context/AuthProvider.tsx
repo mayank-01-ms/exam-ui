@@ -60,6 +60,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   const [authState, dispatch] = useReducer(authReducer, initialState);
   axios.defaults.headers.common['Authorization'] =
     `Bearer ${authState.authToken}}`;
+  axios.defaults.baseURL = 'http://localhost:8000';
 
   return (
     <AuthContext.Provider value={{ authState, dispatch }}>

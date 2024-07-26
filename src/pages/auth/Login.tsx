@@ -13,14 +13,14 @@ const Login = () => {
   const handleLogin = async (e: Event) => {
     setErrorMessage('');
     e.preventDefault();
-    dispatch({
-      type: 'LOGIN',
-      username: username,
-      authToken: 'response.data.token',
-      totalQuestions: 10,
-      timePerQuestion: 10,
-    });
-    return;
+    // dispatch({
+    //   type: 'LOGIN',
+    //   username: username,
+    //   authToken: 'response.data.token',
+    //   totalQuestions: 10,
+    //   timePerQuestion: 10,
+    // });
+    // return;
     if (!username) {
       setErrorMessage('Please enter username');
       return;
@@ -40,8 +40,12 @@ const Login = () => {
       } else {
         setErrorMessage('Some error occured. Please try again');
       }
-    } catch (error) {
-      setErrorMessage('Some error occured. Please try again');
+    } catch (error: any) {
+      if (error?.request.status === 406) {
+        setErrorMessage(JSON.parse(error?.request.responseText).error);
+      } else {
+        setErrorMessage('Some error occured. Please try again');
+      }
     }
   };
   return (

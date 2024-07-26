@@ -45,6 +45,10 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
     };
   }, [seconds]);
 
+  useEffect(() => {
+    getNextQuestion();
+  }, []);
+
   const getNextQuestion = async () => {
     try {
       const response = await axios.post('/api/question', {

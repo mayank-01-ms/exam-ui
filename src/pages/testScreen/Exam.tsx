@@ -54,7 +54,11 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
       if (response.status === 200) {
         setQuestionData({ ...response.data, number: ++questionNumber });
       }
-    } catch (error) {}
+    } catch (error) {
+      // instead show a loading state also
+      alert('Ending exam due to technical glitch');
+      setExamState('ENDED');
+    }
   };
 
   const handleNextButtonClick = () => {

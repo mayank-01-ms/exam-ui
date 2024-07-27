@@ -22,7 +22,6 @@ const Feedback = () => {
     } finally {
       setIsFeedbackSubmitted(true);
     }
-    window.location.reload();
   };
 
   return (

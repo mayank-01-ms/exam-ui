@@ -75,8 +75,11 @@ const Question: React.FC<QuestionProps> = ({
             </label>
           </div>
         ))}
-        <div className="reset_answer flex items-center text-blue-400">
-          <span onClick={() => setOptionId(null)}>
+        <div className="reset_answer">
+          <span
+            className="flex items-center text-blue-400"
+            onClick={() => setOptionId(null)}
+          >
             <MdOutlineRefresh className="mt-[1rem] mr-[0.5rem]" />
             <p className="mt-[1rem]">Reset answer</p>
           </span>

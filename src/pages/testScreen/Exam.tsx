@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import Question from './question/Question';
+import TimerBar from './TimerBar';
 
 import { ExamState, QuestionData, Stats } from '../../types/Exam';
 
@@ -9,7 +10,7 @@ import { useAuth } from '../../context/AuthProvider';
 
 import './exam.scss';
 
-let questionNumber = 1;
+let questionNumber: number = 0;
 const _questionData: QuestionData = {
   number: 1,
   question_text: '',
@@ -27,12 +28,12 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
   const { authState } = useAuth();
 
   const [seconds, setSeconds] = useState<number>(authState.timePerQuestion);
-
   const [questionData, setQuestionData] = useState<QuestionData>(_questionData);
   const [stats, setStats] = useState<Stats>({
     attemptedQuestions: 0,
     skippedQuestions: 0,
   });
+  const [animationKey, setAnimationKey] = useState<number>(0); //when key changes timer component will re render and hence the animation
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,6 +47,7 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
   }, [seconds]);
 
   useEffect(() => {
+    // get first question on initial render
     getNextQuestion();
   }, []);
 
@@ -56,7 +58,9 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
         token: authState.authToken,
       });
       if (response.status === 200) {
-        setQuestionData({ ...response.data, number: ++questionNumber });
+        setQuestionData({ ...response.data[0], number: ++questionNumber });
+        // restart the animation
+        setAnimationKey((prev) => prev + 1);
       }
     } catch (error) {
       // instead show a loading state also
@@ -82,12 +86,7 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
 
   return (
     <div className="question_container bg-white">
-      <div className="progress-bar-wrapper my-[1rem]">
-        <div
-          className="progress-bar bg-blue-500"
-          style={{ animationDuration: `${authState.timePerQuestion}s` }}
-        ></div>
-      </div>
+      <TimerBar key={animationKey} />
       <div className="bg-white p-[1rem] text-center font-bold text-xl border-b-2 border-slate-200 relative">
         <p className="bg-blue-400 text-center text-white py-[0.25rem] px-[1rem] inline-block rounded-lg absolute top-[10px] left-0 text-base font-normal">
           Time left: {seconds} seconds

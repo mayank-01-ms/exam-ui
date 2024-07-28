@@ -33,10 +33,12 @@ const Login = () => {
         setErrorMessage('Some error occured. Please try again');
       }
     } catch (error: any) {
-      if (error?.request.status === 406) {
-        setErrorMessage(JSON.parse(error?.request.responseText).error);
+      if (axios.isAxiosError(error)) {
+        error.response && error.response.status === 406
+          ? setErrorMessage(JSON.parse(error.request.responseText).error)
+          : setErrorMessage('Some error occurred. Please try again');
       } else {
-        setErrorMessage('Some error occured. Please try again');
+        setErrorMessage('Some error occurred. Please try again');
       }
     }
   };

@@ -48,7 +48,15 @@ const Question: React.FC<QuestionProps> = ({
             attemptedQuestions: stats.attemptedQuestions + 1,
           });
         }
-      } catch (error) {}
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          error.response && error.response.status !== 200
+            ? alert(JSON.parse(error.request.responseText).error)
+            : alert('Some error occurred. Please try again');
+        } else {
+          alert('Some error occurred. Please try again');
+        }
+      }
     }
     handleNextButtonClick();
   };

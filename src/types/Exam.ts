@@ -5,7 +5,7 @@ export interface Option {
 
 export interface QuestionData {
   number: number;
-  question_text: string;
+  text: string;
   options: Option[];
   test_id: string;
   question_id: string;

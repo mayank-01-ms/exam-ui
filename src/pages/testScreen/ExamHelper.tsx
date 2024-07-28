@@ -69,7 +69,7 @@ const ExamHelper = () => {
   };
 
   const onFullScreenExit = async () => {
-    // write code to exit the test here
+    // exit the test here
     setExamState('ENDED');
   };
 
@@ -78,7 +78,7 @@ const ExamHelper = () => {
     setExamState('STARTED');
   };
 
-  // not keepng separate if condition as full screen will be triggered only when div with reference is rendered
+  // not keeipng separate if condition as full screen will be triggered only when div with reference is rendered
   return (
     <div ref={elementRef} className="bg-white">
       {examState === 'NOT_STARTED' && <Instructions startExam={startExam} />}

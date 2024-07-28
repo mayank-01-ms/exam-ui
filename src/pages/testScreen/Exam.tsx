@@ -13,7 +13,7 @@ import './exam.scss';
 let questionNumber: number = 0;
 const _questionData: QuestionData = {
   number: 1,
-  question_text: '',
+  text: '',
   options: [],
   question_id: '',
   test_id: '',
@@ -34,6 +34,7 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
     skippedQuestions: 0,
   });
   const [animationKey, setAnimationKey] = useState<number>(0); //when key changes timer component will re render and hence the animation
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,15 +53,17 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
   }, []);
 
   const getNextQuestion = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post('/api/question', {
         username: authState.username,
         token: authState.authToken,
       });
       if (response.status === 200) {
-        setQuestionData({ ...response.data[0], number: ++questionNumber });
+        setQuestionData({ ...response.data, number: ++questionNumber });
         // restart the animation
         setAnimationKey((prev) => prev + 1);
+        setIsLoading(false);
       }
     } catch (error) {
       // instead show a loading state also
@@ -85,34 +88,42 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
   };
 
   return (
-    <div className="question_container bg-white">
-      <TimerBar key={animationKey} />
-      <div className="bg-white p-[1rem] text-center font-bold text-xl border-b-2 border-slate-200 relative">
-        <p className="bg-blue-400 text-center text-white py-[0.25rem] px-[1rem] inline-block rounded-lg absolute top-[10px] left-0 text-base font-normal">
-          Time left: {seconds} seconds
-        </p>
-        Question {questionData.number} of {authState.totalQuestions}
-        <p
-          onClick={endExam}
-          className="ml-[1rem] bg-red-700 text-white font-bold py-[0.25rem] px-[1rem] rounded-lg inline-block absolute top-[10px] right-0"
-        >
-          End Test
-        </p>
-      </div>
-      <Question
-        handleNextButtonClick={handleNextButtonClick}
-        questionData={questionData}
-        stats={stats}
-        setStats={setStats}
-      />
-      <div className="mt-[2rem]">
-        <span className="ml-[1rem] bg-green-400 text-white font-bold py-[0.25rem] px-[1rem]">
-          Attempted: {stats.attemptedQuestions}
-        </span>
-        <span className="ml-[1rem] bg-red-400 text-white font-bold py-[0.25rem] px-[1rem]">
-          Skipped: {stats.skippedQuestions}
-        </span>
-      </div>
+    <div className="question_container bg-white relative">
+      {isLoading ? (
+        <div className="h-[100vh] w-[100vw] ml-[-2rem] mt-[-1rem] bg-slate-300 opacity-75 absolute top-0 flex items-center justify-center">
+          <span className="text-xl">Please wait..</span>
+        </div>
+      ) : (
+        <>
+          <TimerBar key={animationKey} />
+          <div className="bg-white p-[1rem] text-center font-bold text-xl border-b-2 border-slate-200 relative">
+            <p className="bg-blue-400 text-center text-white py-[0.25rem] px-[1rem] inline-block rounded-lg absolute top-[10px] left-0 text-base font-normal">
+              Time left: {seconds} seconds
+            </p>
+            Question {questionData.number} of {authState.totalQuestions}
+            <p
+              onClick={endExam}
+              className="ml-[1rem] bg-red-700 text-white font-bold py-[0.25rem] px-[1rem] rounded-lg inline-block absolute top-[10px] right-0"
+            >
+              End Test
+            </p>
+          </div>
+          <Question
+            handleNextButtonClick={handleNextButtonClick}
+            questionData={questionData}
+            stats={stats}
+            setStats={setStats}
+          />
+          <div className="mt-[2rem]">
+            <span className="ml-[1rem] bg-green-400 text-white font-bold py-[0.25rem] px-[1rem]">
+              Attempted: {stats.attemptedQuestions}
+            </span>
+            <span className="ml-[1rem] bg-red-400 text-white font-bold py-[0.25rem] px-[1rem]">
+              Skipped: {stats.skippedQuestions}
+            </span>
+          </div>
+        </>
+      )}
     </div>
   );
 };

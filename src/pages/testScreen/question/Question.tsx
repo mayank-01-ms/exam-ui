@@ -57,7 +57,7 @@ const Question: React.FC<QuestionProps> = ({
     <div className="question_container">
       <p className="mt-[2rem]">
         <span className="font-bold">Q{questionData.number}: </span>
-        {questionData.question_text}
+        {questionData.text}
       </p>
       <div className="options_list ml-[2rem]">
         {questionData.options.map((option) => (

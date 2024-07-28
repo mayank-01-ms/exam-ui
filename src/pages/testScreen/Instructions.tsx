@@ -17,6 +17,7 @@ const Instructions: React.FC<Props> = ({ startExam }) => {
           If an option is not selected and time for that question expires, the
           question will be marked as skipped
         </li>
+        <li>Right click is disabled during the exam.</li>
         <li>All the best !!</li>
       </ol>
       <div className="mt-[1rem]">

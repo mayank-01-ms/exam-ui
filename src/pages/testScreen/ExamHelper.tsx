@@ -20,9 +20,18 @@ const ExamHelper = () => {
     document.addEventListener('fullscreenchange', handleFullScreenChange);
     document.addEventListener('visibilitychange', handleFullScreenChange);
 
+    // add right click disable event
+    const handleContextMenu = (event: Event) => {
+      event.preventDefault();
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+
     return () => {
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
       document.removeEventListener('visibilitychange', handleFullScreenChange);
+
+      // remove the right click event
+      document.removeEventListener('contextmenu', handleContextMenu);
     };
   }, []);
 

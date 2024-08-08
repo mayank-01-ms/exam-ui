@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import axios from 'axios';
 
@@ -15,6 +15,7 @@ interface QuestionProps {
   questionData: QuestionData;
   stats: any;
   setStats: any;
+  seconds: number;
 }
 
 const Question: React.FC<QuestionProps> = ({
@@ -22,10 +23,15 @@ const Question: React.FC<QuestionProps> = ({
   questionData,
   stats,
   setStats,
+  seconds,
 }) => {
   const [optionId, setOptionId] = useState<string | null>(null);
 
   const { authState } = useAuth();
+
+  useEffect(() => {
+    if (seconds === 0) submitAnswer();
+  }, [seconds]);
 
   const handleRadioClick = (val: string) => {
     setOptionId(val);

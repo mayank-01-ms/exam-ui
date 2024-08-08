@@ -41,7 +41,6 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
       if (seconds > 0) setSeconds(seconds - 1);
       else clearInterval(interval);
     }, 1000);
-    if (seconds === 0) handleNextButtonClick();
     return () => {
       clearInterval(interval);
     };
@@ -113,6 +112,7 @@ const Exam: React.FC<Props> = ({ toggleFullScreen, setExamState }) => {
             questionData={questionData}
             stats={stats}
             setStats={setStats}
+            seconds={seconds}
           />
           <div className="mt-[2rem]">
             <span className="ml-[1rem] bg-green-400 text-white font-bold py-[0.25rem] px-[1rem]">
